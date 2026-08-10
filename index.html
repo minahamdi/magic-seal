@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#fff8fb" />
+<title>Our Little Secret ✨</title>
+<style>
+  :root{
+    --ink:#4f4350; --muted:#817581; --cream:#fffaf4; --pink:#ffd5e5; --pink2:#fff0f6;
+    --blue:#d6ecff; --blue2:#eef8ff; --lav:#e9dcff; --mint:#dcf7e8; --gold:#f4c965;
+    --shadow:0 18px 50px rgba(92,70,92,.15); --radius:28px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;min-height:100%;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:linear-gradient(145deg,#fffaf6 0%,#fff5fb 45%,#f5fbff 100%)}
+  body{min-height:100vh;min-height:100dvh;overflow-x:hidden}
+  button,input{font:inherit}
+  button{touch-action:manipulation}
+  .bg{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+  .floaty{position:absolute;font-size:clamp(22px,5vw,42px);opacity:.2;animation:drift var(--t,12s) ease-in-out infinite alternate;filter:saturate(.75)}
+  @keyframes drift{from{transform:translate3d(0,10px,0) rotate(-8deg)}to{transform:translate3d(var(--x,20px),-35px,0) rotate(10deg)}}
+  .app{position:relative;z-index:1;width:min(100%,680px);margin:0 auto;padding:max(18px,env(safe-area-inset-top)) 18px max(26px,env(safe-area-inset-bottom))}
+  .brand{text-align:center;margin:5px 0 18px}.brand .tiny{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#988998;font-weight:800}.brand h1{font-size:clamp(27px,7vw,42px);margin:7px 0 5px;line-height:1.04}.brand p{margin:0;color:var(--muted);font-size:14px}
+  .card{background:rgba(255,255,255,.83);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.8);box-shadow:var(--shadow);border-radius:var(--radius);padding:22px;position:relative;overflow:hidden}
+  .card:before{content:"";position:absolute;width:150px;height:150px;border-radius:50%;background:var(--pink);filter:blur(45px);opacity:.22;right:-70px;top:-70px;pointer-events:none}
+  .screen{display:none}.screen.active{display:block;animation:enter .45s cubic-bezier(.2,.8,.2,1)}
+  @keyframes enter{from{opacity:0;transform:translateY(12px) scale(.985)}to{opacity:1;transform:none}}
+  h2{font-size:24px;line-height:1.15;margin:0 0 8px} p{line-height:1.5}.lead{color:var(--muted);margin:0 0 18px}
+  .hero-baby{width:112px;height:112px;margin:2px auto 15px;position:relative;animation:bob 2.4s ease-in-out infinite}.baby-face{position:absolute;inset:18px;border-radius:47% 47% 50% 50%;background:#ffd9be;box-shadow:inset 0 -7px 0 rgba(218,150,113,.08)}.baby-face:before,.baby-face:after{content:"";position:absolute;width:7px;height:10px;border-radius:50%;background:#53434c;top:36px}.baby-face:before{left:24px}.baby-face:after{right:24px}.smile{position:absolute;width:25px;height:13px;border-bottom:3px solid #a75e72;border-radius:0 0 20px 20px;left:50%;top:56px;transform:translateX(-50%)}.curl{position:absolute;width:29px;height:23px;border:5px solid #8d654e;border-color:#8d654e transparent transparent #8d654e;border-radius:50%;left:43px;top:7px;transform:rotate(18deg)}
+  @keyframes bob{50%{transform:translateY(-6px) rotate(1.5deg)}}
+  .mode-grid{display:grid;grid-template-columns:1fr;gap:12px}.bigbtn,.primary,.secondary,.choice{border:0;border-radius:20px;cursor:pointer;transition:.18s transform,.18s box-shadow,.18s opacity}.bigbtn:active,.primary:active,.secondary:active,.choice:active{transform:scale(.98)}
+  .bigbtn{text-align:left;padding:18px;background:#fff;box-shadow:0 8px 24px rgba(90,70,90,.09);border:1px solid #f4edf3;display:flex;gap:14px;align-items:center}.bigbtn .ico{font-size:34px;width:52px;height:52px;display:grid;place-items:center;border-radius:17px;background:var(--pink2)}.bigbtn:nth-child(2) .ico{background:var(--blue2)}.bigbtn strong{display:block;font-size:17px}.bigbtn span{font-size:13px;color:var(--muted)}
+  .choices{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0}.choice{min-height:150px;padding:16px 10px;background:#fff;border:2px solid transparent;box-shadow:0 8px 25px rgba(84,70,84,.09);display:flex;flex-direction:column;justify-content:center;align-items:center;gap:8px}.choice .emoji{font-size:46px}.choice strong{font-size:18px}.choice small{color:var(--muted)}.choice.selected{border-color:#b99bdc;box-shadow:0 0 0 4px rgba(185,155,220,.12),0 12px 30px rgba(84,70,84,.12)}
+  .primary,.secondary{width:100%;padding:14px 18px;font-weight:800}.primary{background:linear-gradient(135deg,#e3b6cf,#bca7e9);color:#fff;box-shadow:0 10px 25px rgba(154,116,175,.25)}.primary:disabled{opacity:.42;cursor:not-allowed}.secondary{background:#fff;border:1px solid #eadfea;color:var(--ink);margin-top:10px}.textbtn{border:0;background:none;color:#927a94;text-decoration:underline;padding:12px;cursor:pointer;width:100%;font-weight:700}
+  .notice{border-radius:18px;padding:13px 14px;background:#fff6dc;border:1px solid #f6e1a3;font-size:13px;line-height:1.45;margin:13px 0}.notice.safe{background:#eefbf3;border-color:#cbeed8}.notice.error{background:#fff0f0;border-color:#ffcaca;color:#8f4343}
+  .mystery{height:180px;display:grid;place-items:center;position:relative;margin:8px 0 16px}.box{width:118px;height:94px;background:linear-gradient(135deg,#e8cf97,#cfaa61);border-radius:14px;position:relative;box-shadow:0 18px 25px rgba(118,83,32,.18);animation:boxFloat 2s ease-in-out infinite}.box:before{content:"";position:absolute;left:51px;top:0;width:17px;height:100%;background:#f6e3b4}.lid{position:absolute;left:-8px;right:-8px;top:-18px;height:28px;border-radius:10px;background:linear-gradient(135deg,#eedaa8,#d5b46d);box-shadow:0 4px 8px rgba(100,75,35,.12)}.ribbon{position:absolute;width:28px;height:28px;border:8px solid #d9a0b9;border-radius:50% 50% 10% 50%;top:-39px;left:36px;transform:rotate(20deg)}.ribbon.r{left:57px;transform:rotate(70deg)}.spark{position:absolute;animation:spark 1.7s ease-in-out infinite;font-size:18px}.s1{top:11px;left:18%;animation-delay:.2s}.s2{top:22px;right:17%;animation-delay:.6s}.s3{bottom:14px;right:26%;animation-delay:1s}@keyframes boxFloat{50%{transform:translateY(-7px)}}@keyframes spark{0%,100%{opacity:.2;transform:scale(.7) rotate(0)}50%{opacity:1;transform:scale(1.25) rotate(30deg)}}
+  label{display:block;font-weight:800;margin:11px 0 7px;font-size:14px}.sealwrap{position:relative}.sealinput,.codeinput{width:100%;border:1px solid #e7dce6;background:#fff;border-radius:16px;padding:14px 46px 14px 14px;outline:none;font-size:17px}.sealinput:focus,.codeinput:focus{border-color:#bba1d7;box-shadow:0 0 0 4px rgba(187,161,215,.12)}.eye{position:absolute;right:8px;top:8px;width:38px;height:38px;border:0;background:#f8f2f7;border-radius:12px;cursor:pointer}.hint{font-size:12px;color:var(--muted);margin-top:7px}
+  .seal-icon{font-size:50px;text-align:center;margin:5px 0 10px;animation:pulse 1.8s ease-in-out infinite}@keyframes pulse{50%{transform:scale(1.08)}}
+  .qrwrap{background:#fff;border-radius:24px;padding:16px;margin:16px auto;width:min(100%,380px);box-shadow:0 10px 30px rgba(75,65,75,.1);text-align:center}.qrwrap canvas{width:100%;height:auto;image-rendering:pixelated;border-radius:8px;display:block}.codebox{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:10px;word-break:break-all;background:#f8f5f8;padding:10px;border-radius:12px;color:#756975;margin-top:12px;max-height:74px;overflow:auto;text-align:left}
+  .actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}.actions button{margin:0}.scanner{border:2px dashed #dacddd;border-radius:22px;padding:15px;text-align:center;background:rgba(255,255,255,.5);margin:14px 0}.videoWrap{border-radius:18px;overflow:hidden;background:#2f2930;aspect-ratio:1/1;display:none;position:relative}.videoWrap video{width:100%;height:100%;object-fit:cover}.scanline{position:absolute;left:8%;right:8%;height:2px;background:#fff;box-shadow:0 0 10px #fff;top:12%;animation:scan 2s ease-in-out infinite}@keyframes scan{50%{top:86%}}
+  .upload{display:inline-block;padding:12px 16px;border-radius:15px;background:#fff;border:1px solid #e6dce6;font-weight:800;cursor:pointer;margin:5px}.upload input{display:none}
+  .stepdots{display:flex;justify-content:center;gap:7px;margin:8px 0 18px}.dot{width:9px;height:9px;border-radius:50%;background:#e1d8e0}.dot.on{background:#b899cd;transform:scale(1.15)}
+  .revealStage{position:fixed;inset:0;z-index:50;display:none;overflow:hidden;background:#fff}.revealStage.show{display:block;animation:fadein .45s ease}@keyframes fadein{from{opacity:0}to{opacity:1}}.revealInner{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:28px}.revealInner h3{font-size:clamp(42px,13vw,82px);margin:8px 0;line-height:.95}.revealInner p{font-size:clamp(17px,5vw,25px);margin:8px 0 24px}.girl{background:radial-gradient(circle at 50% 30%,#fff 0 8%,#ffe5f0 35%,#f7bed8 100%)}.boy{background:radial-gradient(circle at 50% 30%,#fff 0 8%,#e8f5ff 35%,#b9ddf7 100%)}.revealEmoji{font-size:clamp(70px,22vw,140px);animation:pop .8s cubic-bezier(.15,.9,.3,1.4)}@keyframes pop{0%{transform:scale(0) rotate(-30deg)}100%{transform:scale(1) rotate(0)}}
+  .confetti{position:absolute;width:10px;height:18px;border-radius:4px;top:-30px;animation:fall var(--d) linear forwards;transform:rotate(var(--r));background:var(--c)}@keyframes fall{to{transform:translate3d(var(--dx),110vh,0) rotate(900deg)}}
+  .closeReveal{border:1px solid rgba(80,60,80,.15);background:rgba(255,255,255,.8);padding:12px 18px;border-radius:18px;font-weight:800;color:var(--ink);cursor:pointer}
+  .privacy{font-size:11px;color:#9a8d9a;text-align:center;margin-top:16px;line-height:1.45}.hidden{display:none!important}.center{text-align:center}.successMark{font-size:52px;margin:4px 0}.shake{animation:shake .35s ease}@keyframes shake{25%{transform:translateX(-6px)}50%{transform:translateX(6px)}75%{transform:translateX(-3px)}}
+  @media(min-width:560px){.mode-grid{grid-template-columns:1fr 1fr}.card{padding:28px}.choices{gap:16px}}
+  @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.001ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="bg" aria-hidden="true">
+  <span class="floaty" style="left:5%;top:11%;--t:11s;--x:28px">☁️</span><span class="floaty" style="right:7%;top:16%;--t:9s;--x:-18px">⭐</span>
+  <span class="floaty" style="left:9%;bottom:16%;--t:13s;--x:16px">🧸</span><span class="floaty" style="right:8%;bottom:12%;--t:10s;--x:-24px">🍼</span>
+  <span class="floaty" style="left:45%;top:4%;--t:12s;--x:9px">✨</span>
+</div>
+<main class="app">
+  <div class="brand"><div class="tiny">A tiny secret is waiting</div><h1>Our Little Secret ✨</h1><p>Two seals. One magical reveal.</p></div>
+
+  <section id="home" class="screen active card">
+    <div class="hero-baby" aria-hidden="true"><div class="curl"></div><div class="baby-face"><div class="smile"></div></div></div>
+    <div class="center"><h2>Welcome to the magic box</h2><p class="lead">The gender stays encrypted until reveal day.</p></div>
+    <div class="mode-grid">
+      <button class="bigbtn" onclick="startDoctor()"><span class="ico">🩺</span><span><strong>Doctor Mode</strong><span>Create & seal the secret QR</span></span></button>
+      <button class="bigbtn" onclick="startReveal()"><span class="ico">🎉</span><span><strong>Reveal Day</strong><span>Scan the QR and open the secret</span></span></button>
+    </div>
+    <div class="privacy">Everything happens locally in this browser. The QR stores encrypted data only.</div>
+  </section>
+
+  <section id="doctor" class="screen card">
+    <div class="center"><div style="font-size:47px">🩺✨</div><h2>Doctor’s secret</h2><p class="lead">Please choose the confirmed gender. The positions are randomized.</p></div>
+    <div id="doctorChoices" class="choices"></div>
+    <button id="doctorConfirm" class="primary" disabled onclick="confirmDoctorChoice()">Seal the doctor’s choice 🔒</button>
+    <button class="textbtn" onclick="goHome()">Cancel</button>
+  </section>
+
+  <section id="sealed" class="screen card">
+    <div class="mystery"><span class="spark s1">✨</span><span class="spark s2">⭐</span><span class="spark s3">✨</span><div class="box"><div class="lid"></div><div class="ribbon"></div><div class="ribbon r"></div></div></div>
+    <div class="center"><h2>The secret is inside.</h2><p class="lead">Doctor: please hand the phone back without showing or saying anything.</p></div>
+    <div class="notice safe">The visible choice has been removed. The next step asks for the first private seal.</div>
+    <button class="primary" onclick="showScreen('seal1')">I have the phone — add first seal</button>
+  </section>
+
+  <section id="seal1" class="screen card">
+    <div class="stepdots"><i class="dot on"></i><i class="dot"></i><i class="dot"></i></div><div class="seal-icon">🔐</div>
+    <div class="center"><h2>First seal</h2><p class="lead">Enter the first private password. It will not be written into the QR.</p></div>
+    <label for="seal1Input">First seal</label><div class="sealwrap"><input id="seal1Input" class="sealinput" type="password" autocomplete="new-password" autocapitalize="none" spellcheck="false" placeholder="Enter a private seal" /><button class="eye" onclick="toggleEye('seal1Input',this)" aria-label="Show or hide password">👁️</button></div>
+    <div class="hint">Use something memorable. Both seals are required again on reveal day.</div>
+    <button class="primary" style="margin-top:16px" onclick="acceptSeal1()">Lock first seal ✨</button>
+  </section>
+
+  <section id="seal2" class="screen card">
+    <div class="stepdots"><i class="dot on"></i><i class="dot on"></i><i class="dot"></i></div><div class="seal-icon">🔐</div>
+    <div class="center"><h2>Second seal</h2><p class="lead">Now add the second private password to complete the encryption.</p></div>
+    <label for="seal2Input">Second seal</label><div class="sealwrap"><input id="seal2Input" class="sealinput" type="password" autocomplete="new-password" autocapitalize="none" spellcheck="false" placeholder="Enter the second seal" /><button class="eye" onclick="toggleEye('seal2Input',this)" aria-label="Show or hide password">👁️</button></div>
+    <button id="makeQrBtn" class="primary" style="margin-top:16px" onclick="acceptSeal2()">Create the magic QR ✨</button>
+    <div id="sealError" class="notice error hidden"></div>
+  </section>
+
+  <section id="qrDone" class="screen card">
+    <div class="stepdots"><i class="dot on"></i><i class="dot on"></i><i class="dot on"></i></div><div class="center"><div class="successMark">🎁</div><h2>Secret sealed!</h2><p class="lead">Save this QR somewhere safe for reveal day.</p></div>
+    <div class="qrwrap"><canvas id="qrCanvas" width="660" height="660" aria-label="Encrypted gender reveal QR code"></canvas><div id="encryptedCode" class="codebox"></div></div>
+    <div class="actions"><button class="primary" onclick="saveQR()">Save QR image</button><button class="secondary" onclick="copyCode()">Copy backup code</button></div>
+    <div class="notice safe">A normal QR scanner can read the encrypted text, but it cannot reveal the gender without both seals.</div>
+    <button class="textbtn" onclick="newCeremony()">Start over / clear this phone</button>
+  </section>
+
+  <section id="scan" class="screen card">
+    <div class="center"><div style="font-size:50px">📷✨</div><h2>Reveal day</h2><p class="lead">Scan the saved magic QR, choose its image, or paste the encrypted backup code.</p></div>
+    <div class="scanner">
+      <button id="cameraBtn" class="primary" onclick="startCameraScan()">Scan with camera</button>
+      <label class="upload">Choose QR image<input id="qrFile" type="file" accept="image/*" onchange="scanImageFile(this.files[0])" /></label>
+      <div id="videoWrap" class="videoWrap"><video id="scanVideo" playsinline muted></video><div class="scanline"></div></div>
+      <div id="scanStatus" class="hint" style="margin-top:10px"></div>
+    </div>
+    <label for="manualCode">Encrypted backup code</label><textarea id="manualCode" class="codeinput" rows="4" style="padding-right:14px;resize:vertical" placeholder="BR1...."></textarea>
+    <button class="primary" style="margin-top:12px" onclick="useManualCode()">Use this magic code</button><button class="textbtn" onclick="goHome()">Back</button>
+  </section>
+
+  <section id="openSeal1" class="screen card">
+    <div class="stepdots"><i class="dot on"></i><i class="dot"></i><i class="dot"></i></div><div class="seal-icon">🗝️</div><div class="center"><h2>First seal, please</h2><p class="lead">The box recognizes the two original seals only.</p></div>
+    <div class="sealwrap"><input id="open1Input" class="sealinput" type="password" autocomplete="new-password" autocapitalize="none" spellcheck="false" placeholder="First seal" /><button class="eye" onclick="toggleEye('open1Input',this)">👁️</button></div>
+    <button class="primary" style="margin-top:16px" onclick="acceptOpen1()">Turn the first key ✨</button>
+  </section>
+
+  <section id="openSeal2" class="screen card">
+    <div class="stepdots"><i class="dot on"></i><i class="dot on"></i><i class="dot"></i></div><div class="seal-icon">🗝️</div><div class="center"><h2>Second seal</h2><p class="lead">One last key before the mystery box opens…</p></div>
+    <div class="sealwrap"><input id="open2Input" class="sealinput" type="password" autocomplete="new-password" autocapitalize="none" spellcheck="false" placeholder="Second seal" /><button class="eye" onclick="toggleEye('open2Input',this)">👁️</button></div>
+    <button id="revealBtn" class="primary" style="margin-top:16px" onclick="doReveal()">Open the mystery box 🎁</button><div id="openError" class="notice error hidden"></div>
+  </section>
+</main>
+
+<div id="revealStage" class="revealStage"><div id="revealInner" class="revealInner"><div><div id="revealEmoji" class="revealEmoji"></div><div style="font-size:18px;font-weight:800;letter-spacing:.15em;text-transform:uppercase">Our little miracle is a</div><h3 id="revealTitle"></h3><p id="revealSub"></p><button class="closeReveal" onclick="closeReveal()">Keep celebrating ✨</button></div></div></div>
+
+<script>
+'use strict';
+const APP_PREFIX='BR1.';
+const PBKDF2_ITERATIONS=260000;
+const AAD=new TextEncoder().encode('BABYREVEAL1');
+let doctorSelection=null, tempKeyBytes=null, tempIv=null, tempCipher=null;
+let sealOne='', openSealOne='', activePayload='', cameraStream=null, scanTimer=null;
+
+function showScreen(id){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); window.scrollTo({top:0,behavior:'smooth'}); }
+function goHome(){ stopCamera(); showScreen('home'); }
+function newCeremony(){ resetSecrets(); showScreen('home'); }
+function resetSecrets(){ doctorSelection=null; if(tempKeyBytes) tempKeyBytes.fill(0); tempKeyBytes=null; tempIv=null; tempCipher=null; sealOne=''; openSealOne=''; activePayload=''; ['seal1Input','seal2Input','open1Input','open2Input','manualCode'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=''}); document.getElementById('encryptedCode').textContent=''; stopCamera(); }
+function toggleEye(id,b){const e=document.getElementById(id);e.type=e.type==='password'?'text':'password';b.textContent=e.type==='password'?'👁️':'🙈'}
+function randomBool(){const a=new Uint8Array(1);crypto.getRandomValues(a);return !!(a[0]&1)}
+function startDoctor(){ resetSecrets(); const opts=[{v:'PRINCESS',e:'👑',t:'Princess',s:'A little princess'},{v:'SUPERHERO',e:'🦸',t:'Superhero',s:'A little superhero'}]; if(randomBool())opts.reverse(); const box=document.getElementById('doctorChoices');box.innerHTML='';opts.forEach(o=>{const b=document.createElement('button');b.className='choice';b.innerHTML=`<span class="emoji">${o.e}</span><strong>${o.t}</strong><small>${o.s}</small>`;b.onclick=()=>{doctorSelection=o.v;document.querySelectorAll('.choice').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');document.getElementById('doctorConfirm').disabled=false};box.appendChild(b)});document.getElementById('doctorConfirm').disabled=true;showScreen('doctor')}
+async function confirmDoctorChoice(){ if(!doctorSelection)return; const btn=document.getElementById('doctorConfirm');btn.disabled=true;btn.textContent='Sealing… ✨'; try{tempKeyBytes=crypto.getRandomValues(new Uint8Array(32));tempIv=crypto.getRandomValues(new Uint8Array(12));const k=await crypto.subtle.importKey('raw',tempKeyBytes,{name:'AES-GCM'},false,['encrypt','decrypt']);const plain=new TextEncoder().encode(doctorSelection);tempCipher=new Uint8Array(await crypto.subtle.encrypt({name:'AES-GCM',iv:tempIv,additionalData:AAD},k,plain));plain.fill(0);doctorSelection=null;document.getElementById('doctorChoices').innerHTML='';showScreen('sealed')}catch(e){alert('This browser could not create the secure seal. Please use a modern browser.');btn.disabled=false}finally{btn.textContent='Seal the doctor’s choice 🔒'}}
+function acceptSeal1(){const el=document.getElementById('seal1Input');if(el.value.length<4){shake(el);return}sealOne=el.value;el.value='';showScreen('seal2');setTimeout(()=>document.getElementById('seal2Input').focus(),250)}
+async function acceptSeal2(){const el=document.getElementById('seal2Input'),err=document.getElementById('sealError'),btn=document.getElementById('makeQrBtn');err.classList.add('hidden');if(el.value.length<4){shake(el);return}if(!tempCipher||!tempKeyBytes){err.textContent='The doctor’s sealed choice is no longer in this session. Please restart Doctor Mode.';err.classList.remove('hidden');return}const sealTwo=el.value;el.value='';btn.disabled=true;btn.textContent='Enchanting the QR… ✨';try{const tmp=await crypto.subtle.importKey('raw',tempKeyBytes,{name:'AES-GCM'},false,['decrypt']);const plaintext=new Uint8Array(await crypto.subtle.decrypt({name:'AES-GCM',iv:tempIv,additionalData:AAD},tmp,tempCipher));const salt=crypto.getRandomValues(new Uint8Array(16)), iv=crypto.getRandomValues(new Uint8Array(12));const key=await deriveKey(sealOne,sealTwo,salt,['encrypt']);const ciphertext=new Uint8Array(await crypto.subtle.encrypt({name:'AES-GCM',iv,additionalData:AAD},key,plaintext));plaintext.fill(0);const packed=concatBytes(salt,iv,ciphertext);activePayload=APP_PREFIX+base64url(packed);if(activePayload.length>78)throw new Error('Payload too long for built-in QR');renderQR(activePayload,document.getElementById('qrCanvas'));document.getElementById('encryptedCode').textContent=activePayload;sealOne='';if(tempKeyBytes)tempKeyBytes.fill(0);tempKeyBytes=null;tempIv=null;tempCipher=null;showScreen('qrDone')}catch(e){console.error(e);err.textContent='Could not create the encrypted QR. Please restart the ceremony.';err.classList.remove('hidden')}finally{btn.disabled=false;btn.textContent='Create the magic QR ✨'}}
+async function deriveKey(a,b,salt,usages){const material=new TextEncoder().encode(a.length+':'+a+'|'+b.length+':'+b);const base=await crypto.subtle.importKey('raw',material,'PBKDF2',false,['deriveKey']);material.fill(0);return crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:PBKDF2_ITERATIONS,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,usages)}
+function concatBytes(...arrs){const n=arrs.reduce((s,a)=>s+a.length,0),out=new Uint8Array(n);let o=0;arrs.forEach(a=>{out.set(a,o);o+=a.length});return out}
+function base64url(bytes){let s='';for(let i=0;i<bytes.length;i++)s+=String.fromCharCode(bytes[i]);return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')}
+function unbase64url(s){s=s.replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';const b=atob(s),out=new Uint8Array(b.length);for(let i=0;i<b.length;i++)out[i]=b.charCodeAt(i);return out}
+function saveQR(){const c=document.getElementById('qrCanvas'),a=document.createElement('a');a.download='our-little-secret-qr.png';a.href=c.toDataURL('image/png');a.click()}
+async function copyCode(){try{await navigator.clipboard.writeText(activePayload||document.getElementById('encryptedCode').textContent);toast('Encrypted backup code copied ✨')}catch(e){toast('Press and hold the code to copy it.')}}
+function toast(msg){const d=document.createElement('div');d.textContent=msg;Object.assign(d.style,{position:'fixed',left:'50%',bottom:'28px',transform:'translateX(-50%)',background:'#4f4350',color:'#fff',padding:'11px 16px',borderRadius:'15px',zIndex:99,fontWeight:700,fontSize:'13px',boxShadow:'0 8px 30px #0003'});document.body.appendChild(d);setTimeout(()=>d.remove(),2200)}
+function shake(el){el.classList.remove('shake');void el.offsetWidth;el.classList.add('shake');el.focus()}
+
+function startReveal(){resetSecrets();document.getElementById('scanStatus').textContent='';showScreen('scan')}
+function validPayload(s){s=(s||'').trim();if(!s.startsWith(APP_PREFIX))return false;try{const x=unbase64url(s.slice(APP_PREFIX.length));return x.length>=45&&x.length<=60}catch(e){return false}}
+function acceptPayload(s){s=(s||'').trim();if(!validPayload(s)){document.getElementById('scanStatus').textContent='That does not look like a valid Little Secret QR.';return false}activePayload=s;stopCamera();showScreen('openSeal1');return true}
+function useManualCode(){acceptPayload(document.getElementById('manualCode').value)}
+function acceptOpen1(){const el=document.getElementById('open1Input');if(el.value.length<4){shake(el);return}openSealOne=el.value;el.value='';showScreen('openSeal2');setTimeout(()=>document.getElementById('open2Input').focus(),250)}
+async function doReveal(){const el=document.getElementById('open2Input'),btn=document.getElementById('revealBtn'),err=document.getElementById('openError');err.classList.add('hidden');if(el.value.length<4){shake(el);return}const sealTwo=el.value;el.value='';btn.disabled=true;btn.textContent='The box is listening… ✨';try{const raw=unbase64url(activePayload.slice(APP_PREFIX.length));const salt=raw.slice(0,16),iv=raw.slice(16,28),cipher=raw.slice(28);const key=await deriveKey(openSealOne,sealTwo,salt,['decrypt']);const plain=await crypto.subtle.decrypt({name:'AES-GCM',iv,additionalData:AAD},key,cipher);const result=new TextDecoder().decode(plain);openSealOne='';if(result!=='PRINCESS'&&result!=='SUPERHERO')throw new Error('Unexpected secret');await dramaticReveal(result)}catch(e){openSealOne='';err.textContent='The magic box did not open. One of the seals may be different from the original, or this is not the matching QR.';err.classList.remove('hidden');document.getElementById('openSeal1').querySelector('input').value='';setTimeout(()=>showScreen('openSeal1'),1800)}finally{btn.disabled=false;btn.textContent='Open the mystery box 🎁'}}
+async function dramaticReveal(result){const stage=document.getElementById('revealStage'),inner=document.getElementById('revealInner');stage.querySelectorAll('.confetti').forEach(x=>x.remove());inner.className='revealInner '+(result==='PRINCESS'?'girl':'boy');document.getElementById('revealEmoji').textContent=result==='PRINCESS'?'👑👶':'🦸👶';document.getElementById('revealTitle').textContent=result==='PRINCESS'?'PRINCESS!':'SUPERHERO!';document.getElementById('revealSub').textContent=result==='PRINCESS'?'A beautiful little girl is on the way 💗':'A wonderful little boy is on the way 💙';stage.classList.add('show');makeConfetti(result==='PRINCESS');if(navigator.vibrate)navigator.vibrate([80,40,120])}
+function makeConfetti(girl){const stage=document.getElementById('revealStage'),colors=girl?['#f39abd','#ffd4e4','#fff','#d9b9f2','#f3ca6b']:['#80c8f2','#ccecff','#fff','#b6c7f4','#f3ca6b'];for(let i=0;i<100;i++){const c=document.createElement('i');c.className='confetti';c.style.left=Math.random()*100+'vw';c.style.setProperty('--d',(2.4+Math.random()*2.8)+'s');c.style.setProperty('--dx',(-90+Math.random()*180)+'px');c.style.setProperty('--r',(Math.random()*360)+'deg');c.style.setProperty('--c',colors[i%colors.length]);c.style.animationDelay=(Math.random()*1.1)+'s';stage.appendChild(c)}}
+function closeReveal(){document.getElementById('revealStage').classList.remove('show');resetSecrets();showScreen('home')}
+
+async function startCameraScan(){const status=document.getElementById('scanStatus'),wrap=document.getElementById('videoWrap'),video=document.getElementById('scanVideo');if(!('BarcodeDetector' in window)){status.textContent='Live QR scanning is not available in this browser. Choose the saved QR image below instead — it can be decoded locally by this app.';return}try{const supported=await BarcodeDetector.getSupportedFormats();if(!supported.includes('qr_code'))throw new Error('QR unsupported');cameraStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'}}});video.srcObject=cameraStream;await video.play();wrap.style.display='block';status.textContent='Point the camera at the saved QR…';const detector=new BarcodeDetector({formats:['qr_code']});const loop=async()=>{if(!cameraStream)return;try{const codes=await detector.detect(video);for(const c of codes){if(acceptPayload(c.rawValue))return}}catch(e){}scanTimer=setTimeout(loop,220)};loop()}catch(e){console.error(e);status.textContent='Camera scanning could not start. Choose the QR image or paste its encrypted text instead.'}}
+function stopCamera(){if(scanTimer){clearTimeout(scanTimer);scanTimer=null}if(cameraStream){cameraStream.getTracks().forEach(t=>t.stop());cameraStream=null}const w=document.getElementById('videoWrap');if(w)w.style.display='none'}
+async function scanImageFile(file){if(!file)return;const status=document.getElementById('scanStatus');status.textContent='Reading the magic QR…';try{let value='';if('BarcodeDetector' in window){try{const bmp=await createImageBitmap(file);const detector=new BarcodeDetector({formats:['qr_code']});const codes=await detector.detect(bmp);if(codes.length)value=codes[0].rawValue}catch(e){}}if(!value)value=await decodeLittleSecretImage(file);if(!value||!acceptPayload(value))throw new Error('Wrong QR')}catch(e){console.error(e);status.textContent='No matching Little Secret QR was found. For the offline fallback, choose the QR PNG saved by this app (or a clean crop containing only that QR).'}}
+async function decodeLittleSecretImage(file){const bmp=await createImageBitmap(file),max=900,scale=Math.min(1,max/Math.max(bmp.width,bmp.height)),w=Math.max(1,Math.round(bmp.width*scale)),h=Math.max(1,Math.round(bmp.height*scale)),c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d',{willReadFrequently:true});x.drawImage(bmp,0,0,w,h);const im=x.getImageData(0,0,w,h),d=im.data;let minX=w,minY=h,maxX=-1,maxY=-1;const darkAt=(px,py)=>{const i=(py*w+px)*4;return (d[i]*.299+d[i+1]*.587+d[i+2]*.114)<145};for(let yy=0;yy<h;yy+=2)for(let xx=0;xx<w;xx+=2)if(darkAt(xx,yy)){if(xx<minX)minX=xx;if(xx>maxX)maxX=xx;if(yy<minY)minY=yy;if(yy>maxY)maxY=yy}if(maxX<0)throw new Error('No dark QR region');const bw=maxX-minX+1,bh=maxY-minY+1;if(Math.abs(bw-bh)/Math.max(bw,bh)>.12)throw new Error('QR crop is not square');const matrix=Array.from({length:33},()=>Array(33).fill(false));for(let r=0;r<33;r++)for(let col=0;col<33;col++){const px=Math.min(w-1,Math.max(0,Math.round(minX+(col+.5)*bw/33))),py=Math.min(h-1,Math.max(0,Math.round(minY+(r+.5)*bh/33)));matrix[r][col]=darkAt(px,py)}for(let rot=0;rot<4;rot++){const val=decodeQRv4LMatrix(matrix);if(val&&val.startsWith(APP_PREFIX))return val;matrix=rotateMatrix(matrix)}return ''}
+function rotateMatrix(a){const n=a.length,b=Array.from({length:n},()=>Array(n));for(let r=0;r<n;r++)for(let c=0;c<n;c++)b[c][n-1-r]=a[r][c];return b}
+function decodeQRv4LMatrix(m){try{const size=33,res=qrReservedV4();let row=size-1,inc=-1,bits=[];for(let col=size-1;col>0;col-=2){if(col===6)col--;while(true){for(let cc=0;cc<2;cc++){const c=col-cc;if(!res[row][c]){let v=!!m[row][c];if(((row+c)&1)===0)v=!v;bits.push(v?1:0)}}row+=inc;if(row<0||row>=size){row-=inc;inc=-inc;break}}}const code=[];for(let i=0;i+7<bits.length;i+=8){let b=0;for(let j=0;j<8;j++)b=(b<<1)|bits[i+j];code.push(b)}const dbits=[];for(const b of code.slice(0,80))for(let i=7;i>=0;i--)dbits.push((b>>>i)&1);let at=0,read=n=>{let v=0;while(n--)v=(v<<1)|dbits[at++];return v};if(read(4)!==4)return '';const len=read(8);if(len<1||len>78)return '';const out=new Uint8Array(len);for(let i=0;i<len;i++)out[i]=read(8);return new TextDecoder().decode(out)}catch(e){return ''}}
+function qrReservedV4(){const size=33,r=Array.from({length:size},()=>Array(size).fill(false));const set=(y,x)=>{if(y>=0&&y<size&&x>=0&&x<size)r[y][x]=true};function finder(y0,x0){for(let dy=-1;dy<=7;dy++)for(let dx=-1;dx<=7;dx++)set(y0+dy,x0+dx)}finder(0,0);finder(0,size-7);finder(size-7,0);for(let i=8;i<size-8;i++){set(6,i);set(i,6)}for(let dy=-2;dy<=2;dy++)for(let dx=-2;dx<=2;dx++)set(26+dy,26+dx);for(let i=0;i<15;i++){let y,x;if(i<6){y=i;x=8}else if(i<8){y=i+1;x=8}else{y=size-15+i;x=8}set(y,x);if(i<8){y=8;x=size-i-1}else if(i<9){y=8;x=15-i}else{y=8;x=15-i-1}set(y,x)}set(size-8,8);return r}
+
+/* Dependency-free QR encoder: QR version 4, EC level L, byte mode, fixed mask 0. */
+function renderQR(text,canvas){const matrix=makeQRv4L(text);const ctx=canvas.getContext('2d'),quiet=4,n=matrix.length,total=n+quiet*2,scale=Math.floor(canvas.width/total),used=scale*total,off=Math.floor((canvas.width-used)/2);ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.fillStyle='#332d35';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(matrix[r][c])ctx.fillRect(off+(c+quiet)*scale,off+(r+quiet)*scale,scale,scale)}
+function makeQRv4L(text){const bytes=new TextEncoder().encode(text);if(bytes.length>78)throw new Error('QR payload too long');const data=[];let bits=[];const pushBits=(v,n)=>{for(let i=n-1;i>=0;i--)bits.push((v>>>i)&1)};pushBits(0b0100,4);pushBits(bytes.length,8);bytes.forEach(b=>pushBits(b,8));const maxBits=80*8;for(let i=0;i<Math.min(4,maxBits-bits.length);i++)bits.push(0);while(bits.length%8)bits.push(0);for(let i=0;i<bits.length;i+=8){let b=0;for(let j=0;j<8;j++)b=(b<<1)|bits[i+j];data.push(b)}let pad=0;while(data.length<80)data.push((pad++&1)?0x11:0xEC);const ecc=rsRemainder(data,20),all=data.concat(ecc);const size=33,m=Array.from({length:size},()=>Array(size).fill(null)),reserved=Array.from({length:size},()=>Array(size).fill(false));const setF=(r,c,v)=>{if(r>=0&&r<size&&c>=0&&c<size){m[r][c]=!!v;reserved[r][c]=true}};
+  function finder(r0,c0){for(let dy=-1;dy<=7;dy++)for(let dx=-1;dx<=7;dx++){const r=r0+dy,c=c0+dx;if(r<0||r>=size||c<0||c>=size)continue;const in7=dy>=0&&dy<=6&&dx>=0&&dx<=6;const val=in7&&(dy===0||dy===6||dx===0||dx===6||(dy>=2&&dy<=4&&dx>=2&&dx<=4));setF(r,c,val)}}
+  finder(0,0);finder(0,size-7);finder(size-7,0);
+  for(let i=8;i<size-8;i++){if(!reserved[6][i])setF(6,i,(i%2)===0);if(!reserved[i][6])setF(i,6,(i%2)===0)}
+  function align(cy,cx){for(let dy=-2;dy<=2;dy++)for(let dx=-2;dx<=2;dx++){const d=Math.max(Math.abs(dx),Math.abs(dy));setF(cy+dy,cx+dx,d!==1)}} align(26,26);
+  const fmtPos=[];for(let i=0;i<15;i++){let r,c;if(i<6){r=i;c=8}else if(i<8){r=i+1;c=8}else{r=size-15+i;c=8}fmtPos.push([r,c]);setF(r,c,false);if(i<8){r=8;c=size-i-1}else if(i<9){r=8;c=15-i}else{r=8;c=15-i-1}fmtPos.push([r,c]);setF(r,c,false)}setF(size-8,8,true);
+  let byteIndex=0,bitIndex=7,inc=-1,row=size-1;for(let col=size-1;col>0;col-=2){if(col===6)col--;while(true){for(let cc=0;cc<2;cc++){const c=col-cc;if(!reserved[row][c]){let dark=false;if(byteIndex<all.length)dark=((all[byteIndex]>>>bitIndex)&1)!==0;if(((row+c)&1)===0)dark=!dark;m[row][c]=dark;bitIndex--;if(bitIndex<0){byteIndex++;bitIndex=7}}}row+=inc;if(row<0||row>=size){row-=inc;inc=-inc;break}}}
+  const format=formatBitsL(0);for(let i=0;i<15;i++){const v=((format>>>i)&1)!==0;let r,c;if(i<6){r=i;c=8}else if(i<8){r=i+1;c=8}else{r=size-15+i;c=8}m[r][c]=v;if(i<8){r=8;c=size-i-1}else if(i<9){r=8;c=15-i}else{r=8;c=15-i-1}m[r][c]=v}m[size-8][8]=true;return m}
+function formatBitsL(mask){const G=0x537,M=0x5412,data=(1<<3)|mask;let d=data<<10;const degree=x=>{let n=0;while(x){n++;x>>>=1}return n};while(degree(d)-degree(G)>=0)d^=G<<(degree(d)-degree(G));return (((data<<10)|d)^M)&0x7fff}
+const GF_EXP=new Uint8Array(512),GF_LOG=new Uint8Array(256);(function(){let x=1;for(let i=0;i<255;i++){GF_EXP[i]=x;GF_LOG[x]=i;x<<=1;if(x&0x100)x^=0x11d}for(let i=255;i<512;i++)GF_EXP[i]=GF_EXP[i-255]})();
+function gfMul(a,b){return(!a||!b)?0:GF_EXP[GF_LOG[a]+GF_LOG[b]]}
+function rsRemainder(data,degree){let gen=[1];for(let i=0;i<degree;i++){const next=new Array(gen.length+1).fill(0);for(let j=0;j<gen.length;j++){next[j]^=gen[j];next[j+1]^=gfMul(gen[j],GF_EXP[i])}gen=next}const rem=new Array(degree).fill(0);for(const b of data){const factor=b^rem[0];for(let i=0;i<degree-1;i++)rem[i]=rem[i+1];rem[degree-1]=0;for(let i=0;i<degree;i++)rem[i]^=gfMul(gen[i+1],factor)}return rem}
+
+document.addEventListener('visibilitychange',()=>{if(document.hidden)stopCamera()});
+</script>
+</body>
+</html>
